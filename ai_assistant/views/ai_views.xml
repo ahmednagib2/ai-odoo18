@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ai_provider_list" model="ir.ui.view">
+        <field name="name">ai.provider.list</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="provider_type"/>
+                <field name="model_name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="ai_provider_form" model="ir.ui.view">
+        <field name="name">ai.provider.form</field>
+        <field name="model">ai.provider</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test connection" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="provider_type"/>
+                            <field name="api_key" password="True"/>
+                            <field name="base_url"/>
+                            <field name="model_name"/>
+                        </group>
+                        <group>
+                            <field name="reasoning" invisible="provider_type != 'gemini'"/>
+                            <field name="temperature"/>
+                            <field name="max_tokens"/>
+                            <field name="timeout"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="ai_allowed_model_list" model="ir.ui.view">
+        <field name="name">ai.allowed.model.list</field>
+        <field name="model">ai.allowed.model</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="model_id"/>
+                <field name="perm_read"/>
+                <field name="perm_create"/>
+                <field name="perm_write"/>
+                <field name="perm_call"/>
+                <field name="owner_field"/>
+                <field name="shared_data"/>
+                <field name="max_records"/>
+            </list>
+        </field>
+    </record>
+    <record id="ai_allowed_model_form" model="ir.ui.view">
+        <field name="name">ai.allowed.model.form</field>
+        <field name="model">ai.allowed.model</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="model_name"/>
+                            <field name="owner_field"/>
+                            <field name="shared_data"/>
+                        </group>
+                        <group>
+                            <field name="perm_read"/>
+                            <field name="perm_create"/>
+                            <field name="perm_write"/>
+                            <field name="perm_call"/>
+                            <field name="perm_draft"/>
+                            <field name="max_records"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="ai_pending_action_list" model="ir.ui.view">
+        <field name="name">ai.pending.action.list</field>
+        <field name="model">ai.pending.action</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="create_date"/>
+                <field name="user_id"/>
+                <field name="kind"/>
+                <field name="model_name"/>
+                <field name="summary"/>
+                <field name="state"/>
+                <field name="result"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_ai_provider" model="ir.actions.act_window">
+        <field name="name">Providers</field>
+        <field name="res_model">ai.provider</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_ai_allowed_model" model="ir.actions.act_window">
+        <field name="name">Allowed Models</field>
+        <field name="res_model">ai.allowed.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_ai_log" model="ir.actions.act_window">
+        <field name="name">Action Log</field>
+        <field name="res_model">ai.pending.action</field>
+        <field name="view_mode">list</field>
+    </record>
+    <menuitem id="menu_ai_root" name="AI Assistant" parent="base.menu_administration" sequence="90" groups="base.group_system"/>
+    <menuitem id="menu_ai_provider" name="Providers" parent="menu_ai_root" action="action_ai_provider" sequence="1"/>
+    <menuitem id="menu_ai_allowed" name="Allowed Models" parent="menu_ai_root" action="action_ai_allowed_model" sequence="2"/>
+    <menuitem id="menu_ai_log" name="Action Log" parent="menu_ai_root" action="action_ai_log" sequence="3"/>
+</odoo>

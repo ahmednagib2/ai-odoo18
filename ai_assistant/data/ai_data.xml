@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_read_all" model="ir.config_parameter">
+        <field name="key">ai_assistant.read_all</field>
+        <field name="value">1</field>
+    </record>
+    <record id="provider_openai" model="ai.provider">
+        <field name="name">ChatGPT (OpenAI)</field>
+        <field name="provider_type">openai</field>
+        <field name="base_url">https://api.openai.com/v1</field>
+        <field name="model_name">gpt-4.1-mini</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="provider_gemini" model="ai.provider">
+        <field name="name">Google Gemini</field>
+        <field name="provider_type">gemini</field>
+        <field name="base_url">https://generativelanguage.googleapis.com/v1beta</field>
+        <field name="model_name">gemini-3.8-flash</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="provider_claude" model="ai.provider">
+        <field name="name">Claude (Anthropic)</field>
+        <field name="provider_type">anthropic</field>
+        <field name="base_url">https://api.anthropic.com/v1</field>
+        <field name="model_name">claude-sonnet-4-5</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="provider_openclaw" model="ai.provider">
+        <field name="name">OpenClaw / Custom</field>
+        <field name="provider_type">compatible</field>
+        <field name="base_url">http://localhost:18789/v1</field>
+        <field name="model_name">openclaw</field>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

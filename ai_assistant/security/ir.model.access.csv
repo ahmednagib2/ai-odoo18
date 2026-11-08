@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_provider_admin,ai.provider admin,model_ai_provider,base.group_system,1,1,1,1
+access_ai_allowed_model_admin,ai.allowed.model admin,model_ai_allowed_model,base.group_system,1,1,1,1
+access_ai_pending_action_admin,ai.pending.action admin,model_ai_pending_action,base.group_system,1,0,0,0
+access_ai_conversation_admin,ai.conversation admin,model_ai_conversation,base.group_system,1,0,0,0
+access_ai_message_admin,ai.message admin,model_ai_message,base.group_system,1,0,0,0
+access_ai_run_admin,ai.run admin,model_ai_run,base.group_system,1,0,0,0
+access_ai_audit_log_admin,ai.audit.log admin,model_ai_audit_log,base.group_system,1,1,1,1
+access_ai_field_rule_admin,ai.field.rule admin,model_ai_field_rule,base.group_system,1,1,1,1
+access_ai_team_scope_admin,ai.team.scope admin,model_ai_team_scope,base.group_system,1,1,1,1
+access_ai_elevated_access_admin,ai.elevated.access admin,model_ai_elevated_access,base.group_system,1,1,1,1
+access_ai_quota_admin,ai.quota admin,model_ai_quota,base.group_system,1,1,1,1
+access_ai_approval_rule_admin,ai.approval.rule admin,model_ai_approval_rule,base.group_system,1,1,1,1

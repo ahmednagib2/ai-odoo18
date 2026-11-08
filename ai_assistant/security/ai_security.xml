@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_ai_user" model="res.groups">
+        <field name="name">AI Assistant - User (own data only)</field>
+        <field name="comment">Can use the assistant. The assistant only shows this user his own records (per model owner field in Allowed Models).</field>
+    </record>
+    <record id="group_ai_team" model="res.groups">
+        <field name="name">AI Assistant - Team Leader (own + team data)</field>
+        <field name="comment">Own records plus the records of the employees under him (HR manager hierarchy and the sales teams he leads).</field>
+        <field name="implied_ids" eval="[(4, ref('group_ai_user'))]"/>
+    </record>
+    <record id="group_ai_manager" model="res.groups">
+        <field name="name">AI Assistant - General Manager (all data)</field>
+        <field name="comment">Everything his Odoo permissions allow, for all employees.</field>
+        <field name="implied_ids" eval="[(4, ref('group_ai_team'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ai_allowed_model_list_draft" model="ir.ui.view">
+        <field name="name">ai.allowed.model.list.draft</field>
+        <field name="model">ai.allowed.model</field>
+        <field name="inherit_id" ref="ai_allowed_model_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='perm_call']" position="after">
+                <field name="perm_draft"/>
+                <field name="owner_field"/>
+                <field name="shared_data"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
