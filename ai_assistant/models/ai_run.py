@@ -2,15 +2,14 @@ from odoo import fields, models
 
 
 class AiRun(models.Model):
-    """One row per user holding what the assistant is doing right now.
+    """سجل واحد لكل مستخدم يحمل ما يفعله المساعد الآن.
 
-    It is written from a separate cursor (committed immediately) so the browser can read it
-    while the long chat request is still running.
+    يُكتب بمؤشر قاعدة بيانات منفصل (يُحفظ فوراً) ليقرأه المتصفح أثناء استمرار طلب المحادثة الطويل.
     """
     _name = 'ai.run'
-    _description = 'AI live status (per user)'
+    _description = 'الحالة الحية للمساعد الذكي (لكل مستخدم)'
 
-    user_id = fields.Many2one('res.users', required=True, ondelete='cascade', index=True)
-    status = fields.Char()
+    user_id = fields.Many2one('res.users', string='المستخدم', required=True, ondelete='cascade', index=True)
+    status = fields.Char(string='الحالة')
 
-    _sql_constraints = [('user_uniq', 'unique(user_id)', 'One status row per user.')]
+    _sql_constraints = [('user_uniq', 'unique(user_id)', 'يوجد سجل حالة واحد فقط لكل مستخدم.')]

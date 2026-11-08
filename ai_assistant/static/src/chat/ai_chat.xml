@@ -1,77 +1,83 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-name="ai_assistant.Chat">
-        <t t-if="state.allowed">
-            <div class="o_nav_entry o_ai_systray">
-                <button t-attf-class="btn o_ai_systray_btn {{state.open ? 'o_ai_active' : ''}}" t-on-click="toggle" title="AI Assistant" aria-label="AI Assistant">
-                    <span class="o_ai_badge">AI</span>
+<?xml version='1.0' encoding='UTF-8'?>
+<templates xml:space='preserve'>
+    <t t-name='ai_assistant.Chat'>
+        <t t-if='state.allowed'>
+            <div class='o_nav_entry o_ai_systray'>
+                <button t-attf-class="btn o_ai_systray_btn {{state.open ? 'o_ai_active' : ''}}" t-on-click='toggle' title='المساعد الذكي' aria-label='المساعد الذكي'>
+                    <span class='o_ai_badge'>AI</span>
                 </button>
-                <t t-if="state.open">
-                    <div class="o_ai_chat" t-portal="'body'">
-                        <div t-attf-class="o_ai_panel {{state.maximized ? 'o_ai_max' : ''}}" t-on-dragover.prevent="onDragOver" t-on-drop.prevent="onDrop">
-                            <div class="o_ai_header">
-                                <span class="o_ai_badge">AI</span>
-                                <span class="o_ai_title">Assistant</span>
-                                <select class="o_ai_provider" t-on-change="onProviderChange">
-                                    <t t-foreach="state.providers" t-as="p" t-key="p.id">
-                                        <option t-att-value="p.id" t-att-selected="p.id === state.providerId" t-esc="p.name"/>
+                <t t-if='state.open'>
+                    <div class='o_ai_chat' t-portal="'body'">
+                        <div t-attf-class="o_ai_panel {{state.maximized ? 'o_ai_max' : ''}}" t-on-dragover.prevent='onDragOver' t-on-drop.prevent='onDrop'>
+                            <div class='o_ai_header'>
+                                <span class='o_ai_badge'>AI</span>
+                                <span class='o_ai_title'>المساعد الذكي</span>
+                                <select class='o_ai_provider' t-on-change='onProviderChange'>
+                                    <t t-foreach='state.providers' t-as='p' t-key='p.id'>
+                                        <option t-att-value='p.id' t-att-selected='p.id === state.providerId' t-esc='p.name'/>
                                     </t>
                                 </select>
-                                <button class="o_ai_hbtn" t-on-click="newChat" title="New chat"><i class="fa fa-plus"/></button>
-                                <button class="o_ai_hbtn" t-on-click="toggleMax" title="Maximize"><i t-attf-class="fa {{state.maximized ? 'fa-compress' : 'fa-expand'}}"/></button>
-                                <button class="o_ai_hbtn" t-on-click="toggle" title="Close"><i class="fa fa-times"/></button>
+                                <button class='o_ai_hbtn' t-on-click='newChat' title='محادثة جديدة'><i class='fa fa-plus'/></button>
+                                <button class='o_ai_hbtn' t-on-click='toggleMax' title='تكبير / تصغير'><i t-attf-class="fa {{state.maximized ? 'fa-compress' : 'fa-expand'}}"/></button>
+                                <button class='o_ai_hbtn' t-on-click='toggle' title='إغلاق'><i class='fa fa-times'/></button>
                             </div>
-                            <div class="o_ai_messages" t-ref="list">
-                                <div t-if="state.hello" class="o_ai_greet" style="text-align: center; padding: 10px 6px 14px;">
-                                    <div class="o_ai_hello" style="margin-bottom: 4px;">مرحباً يا <t t-esc="state.hello"/> 👋</div>
-                                    <div class="o_ai_status">محتاج تعمل إيه النهاردة؟</div>
+                            <div class='o_ai_messages' t-ref='list'>
+                                <div t-if='state.hello' class='o_ai_greet' style='text-align: center; padding: 10px 6px 14px;'>
+                                    <div class='o_ai_hello' style='margin-bottom: 4px;'>مرحباً يا <t t-esc='state.hello'/> 👋</div>
+                                    <div class='o_ai_status'>محتاج تعمل إيه النهاردة؟</div>
                                 </div>
-                                <div t-if="!state.messages.length" class="o_ai_empty" style="padding-top: 4px;">
-                                    <div class="o_ai_suggest">
-                                        <t t-foreach="suggestions" t-as="s" t-key="s_index">
-                                            <button class="o_ai_sbtn" t-on-click="() => this.useSuggestion(s)" t-esc="s"/>
+                                <div t-if='!state.messages.length' class='o_ai_empty' style='padding-top: 4px;'>
+                                    <div class='o_ai_suggest'>
+                                        <t t-foreach='suggestions' t-as='s' t-key='s_index'>
+                                            <button class='o_ai_sbtn' t-on-click='() => this.useSuggestion(s)' t-esc='s'/>
                                         </t>
                                     </div>
-                                    <div class="o_ai_hint"><i class="fa fa-paperclip"/> اسحب أو الصق صوراً أو PDF أو Word أو Excel أو CSV أو صوت</div>
+                                    <div class='o_ai_hint'><i class='fa fa-paperclip'/> اسحب أو الصق صوراً أو ملفات PDF</div>
                                 </div>
-                                <t t-foreach="state.messages" t-as="m" t-key="m_index">
-                                    <div t-attf-class="o_ai_msg o_ai_{{m.role}}">
-                                        <div class="o_ai_text" t-out="md(m.content)"/>
-                                        <t t-if="m.pendingId">
-                                            <pre dir="ltr" class="o_ai_details" t-esc="m.details"/>
-                                            <div t-if="m.status === 'pending'" class="o_ai_actions">
-                                                <button class="btn btn-sm btn-success" t-on-click="() => this.decide(m, true)">تأكيد</button>
-                                                <button class="btn btn-sm btn-outline-secondary" t-on-click="() => this.decide(m, false)">إلغاء</button>
+                                <t t-foreach='state.messages' t-as='m' t-key='m_index'>
+                                    <div t-attf-class='o_ai_msg o_ai_{{m.role}}'>
+                                        <div class='o_ai_text' t-out='md(m.content)'/>
+                                        <t t-if='m.pendingId'>
+                                            <pre dir='ltr' class='o_ai_details' t-esc='m.details'/>
+                                            <div t-if="m.status === 'pending'" class='o_ai_actions'>
+                                                <button class='btn btn-sm btn-success' t-on-click='() => this.decide(m, true)'>تأكيد</button>
+                                                <button class='btn btn-sm btn-outline-secondary' t-on-click='() => this.decide(m, false)'>إلغاء</button>
                                             </div>
-                                            <small t-else="" class="o_ai_status" t-esc="m.status"/>
+                                            <small t-else='' class='o_ai_status'>
+                                                <t t-if="m.status === 'done'">تم التنفيذ</t>
+                                                <t t-elif="m.status === 'cancelled'">تم الإلغاء</t>
+                                                <t t-elif="m.status === 'failed'">فشل التنفيذ</t>
+                                                <t t-elif="m.status === 'busy'">جارٍ التنفيذ...</t>
+                                                <t t-else='' t-esc='m.status'/>
+                                            </small>
                                         </t>
-                                        <a t-if="m.retry" href="#" class="o_ai_retry" t-on-click.prevent="() => this.retry(m)"><i class="fa fa-refresh"/> إعادة المحاولة</a>
-                                        <a t-if="m.role === 'assistant' and m.content and !m.pendingId" href="#" class="o_ai_copy" t-on-click.prevent="() => this.copy(m)" title="Copy"><i class="fa fa-clone"/></a>
+                                        <a t-if='m.retry' href='#' class='o_ai_retry' t-on-click.prevent='() => this.retry(m)'><i class='fa fa-refresh'/> إعادة المحاولة</a>
+                                        <a t-if="m.role === 'assistant' and m.content and !m.pendingId" href='#' class='o_ai_copy' t-on-click.prevent='() => this.copy(m)' title='نسخ'><i class='fa fa-clone'/></a>
                                     </div>
                                 </t>
-                                <div t-if="state.loading" class="o_ai_msg o_ai_assistant">
-                                    <span class="o_ai_dots"><span/><span/><span/></span>
-                                    <small class="o_ai_status"> <t t-esc="state.status or 'جاري التفكير...'"/></small>
+                                <div t-if='state.loading' class='o_ai_msg o_ai_assistant'>
+                                    <span class='o_ai_dots'><span/><span/><span/></span>
+                                    <small class='o_ai_status'> <t t-esc="state.status or 'جاري التفكير...'"/></small>
                                 </div>
                             </div>
-                            <div t-if="state.attachments.length" class="o_ai_files">
-                                <t t-foreach="state.attachments" t-as="f" t-key="f_index">
-                                    <span class="o_ai_chip">
-                                        <img t-if="isImage(f)" t-att-src="src(f)" class="o_ai_thumb"/>
-                                        <i t-else="" class="fa fa-file-o"/>
-                                        <span t-esc="f.name"/>
-                                        <a href="#" t-on-click.prevent="() => this.removeFile(f_index)"><i class="fa fa-times"/></a>
+                            <div t-if='state.attachments.length' class='o_ai_files'>
+                                <t t-foreach='state.attachments' t-as='f' t-key='f_index'>
+                                    <span class='o_ai_chip'>
+                                        <img t-if='isImage(f)' t-att-src='src(f)' class='o_ai_thumb'/>
+                                        <i t-else='' class='fa fa-file-o'/>
+                                        <span t-esc='f.name'/>
+                                        <a href='#' t-on-click.prevent='() => this.removeFile(f_index)'><i class='fa fa-times'/></a>
                                     </span>
                                 </t>
                             </div>
-                            <div class="o_ai_input">
-                                <input type="file" class="d-none" t-ref="file" multiple="multiple" t-att-accept="accept" t-on-change="onFiles"/>
-                                <div class="o_ai_tools">
-                                    <button class="o_ai_tbtn" t-on-click="pickFile" title="Attach files"><i class="fa fa-paperclip"/></button>
-                                    <button t-attf-class="o_ai_tbtn {{state.listening ? 'o_ai_rec' : ''}}" t-on-click="toggleMic" title="Voice"><i class="fa fa-microphone"/></button>
+                            <div class='o_ai_input'>
+                                <input type='file' class='d-none' t-ref='file' multiple='multiple' t-att-accept='accept' t-on-change='onFiles'/>
+                                <div class='o_ai_tools'>
+                                    <button class='o_ai_tbtn' t-on-click='pickFile' title='إرفاق ملفات'><i class='fa fa-paperclip'/></button>
+                                    <button t-attf-class="o_ai_tbtn {{state.listening ? 'o_ai_rec' : ''}}" t-on-click='toggleMic' title='إملاء صوتي'><i class='fa fa-microphone'/></button>
                                 </div>
-                                <textarea class="o_ai_textarea" rows="2" dir="auto" placeholder="اكتب رسالتك هنا..." t-model="state.input" t-on-keydown="onKeydown" t-on-paste="onPaste"/>
-                                <button class="o_ai_send" t-on-click="send" t-att-disabled="state.loading"><i class="fa fa-paper-plane"/></button>
+                                <textarea class='o_ai_textarea' rows='2' dir='auto' placeholder='اكتب رسالتك هنا...' t-model='state.input' t-on-keydown='onKeydown' t-on-paste='onPaste'/>
+                                <button class='o_ai_send' t-on-click='send' t-att-disabled='state.loading'><i class='fa fa-paper-plane'/></button>
                             </div>
                         </div>
                     </div>

@@ -1,143 +1,143 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
-    <!-- ======================= Audit log / usage reports ======================= -->
-    <record id="ai_audit_log_view_list" model="ir.ui.view">
-        <field name="name">ai.audit.log.list</field>
-        <field name="model">ai.audit.log</field>
-        <field name="arch" type="xml">
-            <list create="0" edit="0" delete="0">
-                <field name="create_date"/>
-                <field name="user_id"/>
-                <field name="action"/>
-                <field name="model_name"/>
-                <field name="status"/>
-                <field name="scope"/>
-                <field name="duration" sum="Total duration"/>
-                <field name="details" optional="hide"/>
+    <!-- ======================= سجل التدقيق / تقارير الاستخدام ======================= -->
+    <record id='ai_audit_log_view_list' model='ir.ui.view'>
+        <field name='name'>ai.audit.log.list</field>
+        <field name='model'>ai.audit.log</field>
+        <field name='arch' type='xml'>
+            <list create='0' edit='0' delete='0'>
+                <field name='create_date'/>
+                <field name='user_id'/>
+                <field name='action'/>
+                <field name='model_name'/>
+                <field name='status'/>
+                <field name='scope'/>
+                <field name='duration' sum='إجمالي المدة'/>
+                <field name='details' optional='hide'/>
             </list>
         </field>
     </record>
 
-    <record id="ai_audit_log_view_form" model="ir.ui.view">
-        <field name="name">ai.audit.log.form</field>
-        <field name="model">ai.audit.log</field>
-        <field name="arch" type="xml">
-            <form create="0" edit="0" delete="0">
+    <record id='ai_audit_log_view_form' model='ir.ui.view'>
+        <field name='name'>ai.audit.log.form</field>
+        <field name='model'>ai.audit.log</field>
+        <field name='arch' type='xml'>
+            <form create='0' edit='0' delete='0'>
                 <sheet>
                     <group>
                         <group>
-                            <field name="create_date"/>
-                            <field name="user_id"/>
-                            <field name="conversation_id"/>
-                            <field name="action"/>
-                            <field name="status"/>
+                            <field name='create_date'/>
+                            <field name='user_id'/>
+                            <field name='conversation_id'/>
+                            <field name='action'/>
+                            <field name='status'/>
                         </group>
                         <group>
-                            <field name="model_name"/>
-                            <field name="scope"/>
-                            <field name="duration"/>
-                            <field name="record_ids"/>
-                            <field name="domain"/>
+                            <field name='model_name'/>
+                            <field name='scope'/>
+                            <field name='duration'/>
+                            <field name='record_ids'/>
+                            <field name='domain'/>
                         </group>
                     </group>
-                    <group string="Details">
-                        <field name="details"/>
+                    <group string='التفاصيل'>
+                        <field name='details'/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="ai_audit_log_view_pivot" model="ir.ui.view">
-        <field name="name">ai.audit.log.pivot</field>
-        <field name="model">ai.audit.log</field>
-        <field name="arch" type="xml">
-            <pivot string="AI Usage">
-                <field name="user_id" type="row"/>
-                <field name="model_name" type="col"/>
-                <field name="id" type="measure" string="Requests"/>
+    <record id='ai_audit_log_view_pivot' model='ir.ui.view'>
+        <field name='name'>ai.audit.log.pivot</field>
+        <field name='model'>ai.audit.log</field>
+        <field name='arch' type='xml'>
+            <pivot string='استخدام المساعد الذكي'>
+                <field name='user_id' type='row'/>
+                <field name='model_name' type='col'/>
+                <field name='id' type='measure' string='الطلبات'/>
             </pivot>
         </field>
     </record>
 
-    <record id="ai_audit_log_view_graph" model="ir.ui.view">
-        <field name="name">ai.audit.log.graph</field>
-        <field name="model">ai.audit.log</field>
-        <field name="arch" type="xml">
-            <graph string="AI Usage">
-                <field name="create_date"/>
-                <field name="user_id"/>
-                <field name="id" type="measure" string="Requests"/>
+    <record id='ai_audit_log_view_graph' model='ir.ui.view'>
+        <field name='name'>ai.audit.log.graph</field>
+        <field name='model'>ai.audit.log</field>
+        <field name='arch' type='xml'>
+            <graph string='استخدام المساعد الذكي'>
+                <field name='create_date'/>
+                <field name='user_id'/>
+                <field name='id' type='measure' string='الطلبات'/>
             </graph>
         </field>
     </record>
 
-    <record id="action_ai_audit_log" model="ir.actions.act_window">
-        <field name="name">AI Usage Reports</field>
-        <field name="res_model">ai.audit.log</field>
-        <field name="view_mode">graph,pivot,list,form</field>
-        <field name="context">{'search_default_group_by_user': 1}</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Monitor AI Assistant usage and governance events</p>
-            <p>Use filters and grouping to analyse requests, models, users and denied actions.</p>
+    <record id='action_ai_audit_log' model='ir.actions.act_window'>
+        <field name='name'>تقارير استخدام المساعد الذكي</field>
+        <field name='res_model'>ai.audit.log</field>
+        <field name='view_mode'>graph,pivot,list,form</field>
+        <field name='context'>{'search_default_group_by_user': 1}</field>
+        <field name='help' type='html'>
+            <p class='o_view_nocontent_smiling_face'>راقب استخدام المساعد الذكي وأحداث الحوكمة</p>
+            <p>استخدم الفلاتر والتجميع لتحليل الطلبات والنماذج والمستخدمين والإجراءات المرفوضة.</p>
         </field>
     </record>
 
-    <record id="ai_audit_log_view_search" model="ir.ui.view">
-        <field name="name">ai.audit.log.search</field>
-        <field name="model">ai.audit.log</field>
-        <field name="arch" type="xml">
+    <record id='ai_audit_log_view_search' model='ir.ui.view'>
+        <field name='name'>ai.audit.log.search</field>
+        <field name='model'>ai.audit.log</field>
+        <field name='arch' type='xml'>
             <search>
-                <field name="user_id"/>
-                <field name="model_name"/>
-                <field name="action"/>
-                <field name="status"/>
-                <filter string="Chat Requests" name="filter_chat" domain="[('action', '=', 'chat')]"/>
-                <filter string="Denied" name="filter_denied" domain="[('status', '=', 'denied')]"/>
-                <filter string="Pending Approval" name="filter_pending" domain="[('status', '=', 'pending')]"/>
-                <filter string="This Month" name="filter_this_month" domain="[('create_date', '&gt;=', 'context_today().strftime(&quot;%Y-%m-01&quot;)')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="User" name="group_by_user" context="{'group_by': 'user_id'}"/>
-                    <filter string="Model" name="group_by_model" context="{'group_by': 'model_name'}"/>
-                    <filter string="Action" name="group_by_action" context="{'group_by': 'action'}"/>
-                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
-                    <filter string="Day" name="group_by_day" context="{'group_by': 'create_date:day'}"/>
+                <field name='user_id'/>
+                <field name='model_name'/>
+                <field name='action'/>
+                <field name='status'/>
+                <filter string='طلبات المحادثة' name='filter_chat' domain="[('action', '=', 'chat')]"/>
+                <filter string='مرفوض' name='filter_denied' domain="[('status', '=', 'denied')]"/>
+                <filter string='بانتظار الموافقة' name='filter_pending' domain="[('status', '=', 'pending')]"/>
+                <filter string='هذا الشهر' name='filter_this_month' domain="[('create_date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                <group expand='0' string='تجميع حسب'>
+                    <filter string='المستخدم' name='group_by_user' context="{'group_by': 'user_id'}"/>
+                    <filter string='النموذج' name='group_by_model' context="{'group_by': 'model_name'}"/>
+                    <filter string='الإجراء' name='group_by_action' context="{'group_by': 'action'}"/>
+                    <filter string='الحالة' name='group_by_status' context="{'group_by': 'status'}"/>
+                    <filter string='اليوم' name='group_by_day' context="{'group_by': 'create_date:day'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <!-- ======================= Field permissions / masking ======================= -->
-    <record id="ai_field_rule_view_list" model="ir.ui.view">
-        <field name="name">ai.field.rule.list</field>
-        <field name="model">ai.field.rule</field>
-        <field name="arch" type="xml">
-            <list editable="bottom">
-                <field name="model_id"/>
-                <field name="field_name"/>
-                <field name="tier"/>
-                <field name="action"/>
-                <field name="active" widget="boolean_toggle"/>
+    <!-- ======================= صلاحيات الحقول / الإخفاء ======================= -->
+    <record id='ai_field_rule_view_list' model='ir.ui.view'>
+        <field name='name'>ai.field.rule.list</field>
+        <field name='model'>ai.field.rule</field>
+        <field name='arch' type='xml'>
+            <list editable='bottom'>
+                <field name='model_id'/>
+                <field name='field_name'/>
+                <field name='tier'/>
+                <field name='action'/>
+                <field name='active' widget='boolean_toggle'/>
             </list>
         </field>
     </record>
 
-    <record id="ai_field_rule_view_form" model="ir.ui.view">
-        <field name="name">ai.field.rule.form</field>
-        <field name="model">ai.field.rule</field>
-        <field name="arch" type="xml">
+    <record id='ai_field_rule_view_form' model='ir.ui.view'>
+        <field name='name'>ai.field.rule.form</field>
+        <field name='model'>ai.field.rule</field>
+        <field name='arch' type='xml'>
             <form>
                 <sheet>
                     <group>
                         <group>
-                            <field name="model_id"/>
-                            <field name="model_name"/>
-                            <field name="field_name"/>
+                            <field name='model_id'/>
+                            <field name='model_name'/>
+                            <field name='field_name'/>
                         </group>
                         <group>
-                            <field name="tier"/>
-                            <field name="action"/>
-                            <field name="active"/>
+                            <field name='tier'/>
+                            <field name='action'/>
+                            <field name='active'/>
                         </group>
                     </group>
                 </sheet>
@@ -145,178 +145,132 @@
         </field>
     </record>
 
-    <record id="action_ai_field_rule" model="ir.actions.act_window">
-        <field name="name">Field Permissions</field>
-        <field name="res_model">ai.field.rule</field>
-        <field name="view_mode">list,form</field>
+    <record id='action_ai_field_rule' model='ir.actions.act_window'>
+        <field name='name'>صلاحيات الحقول</field>
+        <field name='res_model'>ai.field.rule</field>
+        <field name='view_mode'>list,form</field>
     </record>
 
-    <!-- ======================= Team scope ======================= -->
-    <record id="ai_team_scope_view_list" model="ir.ui.view">
-        <field name="name">ai.team.scope.list</field>
-        <field name="model">ai.team.scope</field>
-        <field name="arch" type="xml">
-            <list editable="bottom">
-                <field name="manager_id"/>
-                <field name="member_ids" widget="many2many_tags"/>
-                <field name="include_hierarchy"/>
-                <field name="active" widget="boolean_toggle"/>
+    <!-- ======================= نطاق الفريق ======================= -->
+    <record id='ai_team_scope_view_list' model='ir.ui.view'>
+        <field name='name'>ai.team.scope.list</field>
+        <field name='model'>ai.team.scope</field>
+        <field name='arch' type='xml'>
+            <list editable='bottom'>
+                <field name='manager_id'/>
+                <field name='member_ids' widget='many2many_tags'/>
+                <field name='include_hierarchy'/>
+                <field name='active' widget='boolean_toggle'/>
             </list>
         </field>
     </record>
 
-    <record id="ai_team_scope_view_form" model="ir.ui.view">
-        <field name="name">ai.team.scope.form</field>
-        <field name="model">ai.team.scope</field>
-        <field name="arch" type="xml">
+    <record id='ai_team_scope_view_form' model='ir.ui.view'>
+        <field name='name'>ai.team.scope.form</field>
+        <field name='model'>ai.team.scope</field>
+        <field name='arch' type='xml'>
             <form>
                 <sheet>
                     <group>
-                        <field name="manager_id"/>
-                        <field name="include_hierarchy"/>
-                        <field name="active"/>
+                        <field name='manager_id'/>
+                        <field name='include_hierarchy'/>
+                        <field name='active'/>
                     </group>
-                    <group string="Team Members">
-                        <field name="member_ids" widget="many2many_tags"/>
+                    <group string='أعضاء الفريق'>
+                        <field name='member_ids' widget='many2many_tags'/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="action_ai_team_scope" model="ir.actions.act_window">
-        <field name="name">Team Scopes</field>
-        <field name="res_model">ai.team.scope</field>
-        <field name="view_mode">list,form</field>
+    <record id='action_ai_team_scope' model='ir.actions.act_window'>
+        <field name='name'>نطاقات الفرق</field>
+        <field name='res_model'>ai.team.scope</field>
+        <field name='view_mode'>list,form</field>
     </record>
 
-    <!-- ======================= Temporary elevated access ======================= -->
-    <record id="ai_elevated_access_view_list" model="ir.ui.view">
-        <field name="name">ai.elevated.access.list</field>
-        <field name="model">ai.elevated.access</field>
-        <field name="arch" type="xml">
-            <list editable="bottom">
-                <field name="user_id"/>
-                <field name="tier"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
-                <field name="active" widget="boolean_toggle"/>
-                <field name="reason"/>
+    <!-- ======================= الصلاحية المرتفعة المؤقتة ======================= -->
+    <record id='ai_elevated_access_view_list' model='ir.ui.view'>
+        <field name='name'>ai.elevated.access.list</field>
+        <field name='model'>ai.elevated.access</field>
+        <field name='arch' type='xml'>
+            <list editable='bottom'>
+                <field name='user_id'/>
+                <field name='tier'/>
+                <field name='date_start'/>
+                <field name='date_end'/>
+                <field name='active' widget='boolean_toggle'/>
+                <field name='reason'/>
             </list>
         </field>
     </record>
 
-    <record id="ai_elevated_access_view_form" model="ir.ui.view">
-        <field name="name">ai.elevated.access.form</field>
-        <field name="model">ai.elevated.access</field>
-        <field name="arch" type="xml">
+    <record id='ai_elevated_access_view_form' model='ir.ui.view'>
+        <field name='name'>ai.elevated.access.form</field>
+        <field name='model'>ai.elevated.access</field>
+        <field name='arch' type='xml'>
             <form>
                 <sheet>
                     <group>
                         <group>
-                            <field name="user_id"/>
-                            <field name="tier"/>
+                            <field name='user_id'/>
+                            <field name='tier'/>
                         </group>
                         <group>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-                            <field name="active"/>
+                            <field name='date_start'/>
+                            <field name='date_end'/>
+                            <field name='active'/>
                         </group>
                     </group>
-                    <group string="Reason">
-                        <field name="reason"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="action_ai_elevated_access" model="ir.actions.act_window">
-        <field name="name">Temporary Elevated Access</field>
-        <field name="res_model">ai.elevated.access</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <!-- ======================= Usage quota ======================= -->
-    <record id="ai_quota_view_list" model="ir.ui.view">
-        <field name="name">ai.quota.list</field>
-        <field name="model">ai.quota</field>
-        <field name="arch" type="xml">
-            <list editable="bottom">
-                <field name="name"/>
-                <field name="target"/>
-                <field name="user_id"/>
-                <field name="access_tier"/>
-                <field name="period"/>
-                <field name="max_requests" sum="Total limit"/>
-                <field name="active" widget="boolean_toggle"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="ai_quota_view_form" model="ir.ui.view">
-        <field name="name">ai.quota.form</field>
-        <field name="model">ai.quota</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="target"/>
-                            <field name="user_id" invisible="target != 'user'"/>
-                            <field name="access_tier" invisible="target != 'group'"/>
-                        </group>
-                        <group>
-                            <field name="period"/>
-                            <field name="max_requests"/>
-                            <field name="active"/>
-                        </group>
+                    <group string='السبب'>
+                        <field name='reason'/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="action_ai_quota" model="ir.actions.act_window">
-        <field name="name">Usage Quotas</field>
-        <field name="res_model">ai.quota</field>
-        <field name="view_mode">list,form</field>
+    <record id='action_ai_elevated_access' model='ir.actions.act_window'>
+        <field name='name'>الصلاحيات المرتفعة المؤقتة</field>
+        <field name='res_model'>ai.elevated.access</field>
+        <field name='view_mode'>list,form</field>
     </record>
 
-    <!-- ======================= Approval matrix ======================= -->
-    <record id="ai_approval_rule_view_list" model="ir.ui.view">
-        <field name="name">ai.approval.rule.list</field>
-        <field name="model">ai.approval.rule</field>
-        <field name="arch" type="xml">
-            <list editable="bottom">
-                <field name="model_id"/>
-                <field name="kind"/>
-                <field name="requires_manager_approval"/>
-                <field name="amount_field"/>
-                <field name="threshold"/>
-                <field name="approver_id"/>
+    <!-- ======================= حصص الاستخدام ======================= -->
+    <record id='ai_quota_view_list' model='ir.ui.view'>
+        <field name='name'>ai.quota.list</field>
+        <field name='model'>ai.quota</field>
+        <field name='arch' type='xml'>
+            <list editable='bottom'>
+                <field name='name'/>
+                <field name='target'/>
+                <field name='user_id'/>
+                <field name='access_tier'/>
+                <field name='period'/>
+                <field name='max_requests' sum='إجمالي الحد'/>
+                <field name='active' widget='boolean_toggle'/>
             </list>
         </field>
     </record>
 
-    <record id="ai_approval_rule_view_form" model="ir.ui.view">
-        <field name="name">ai.approval.rule.form</field>
-        <field name="model">ai.approval.rule</field>
-        <field name="arch" type="xml">
+    <record id='ai_quota_view_form' model='ir.ui.view'>
+        <field name='name'>ai.quota.form</field>
+        <field name='model'>ai.quota</field>
+        <field name='arch' type='xml'>
             <form>
                 <sheet>
                     <group>
                         <group>
-                            <field name="model_id"/>
-                            <field name="model_name"/>
-                            <field name="kind"/>
+                            <field name='name'/>
+                            <field name='target'/>
+                            <field name='user_id' invisible="target != 'user'"/>
+                            <field name='access_tier' invisible="target != 'group'"/>
                         </group>
                         <group>
-                            <field name="requires_manager_approval"/>
-                            <field name="amount_field"/>
-                            <field name="threshold"/>
-                            <field name="approver_id"/>
+                            <field name='period'/>
+                            <field name='max_requests'/>
+                            <field name='active'/>
                         </group>
                     </group>
                 </sheet>
@@ -324,18 +278,64 @@
         </field>
     </record>
 
-    <record id="action_ai_approval_rule" model="ir.actions.act_window">
-        <field name="name">Approval Matrix</field>
-        <field name="res_model">ai.approval.rule</field>
-        <field name="view_mode">list,form</field>
+    <record id='action_ai_quota' model='ir.actions.act_window'>
+        <field name='name'>حصص الاستخدام</field>
+        <field name='res_model'>ai.quota</field>
+        <field name='view_mode'>list,form</field>
     </record>
 
-    <!-- ======================= Menus ======================= -->
-    <menuitem id="menu_ai_governance" name="Governance" parent="menu_ai_root" sequence="10"/>
-    <menuitem id="menu_ai_usage_reports" name="Usage Reports" parent="menu_ai_governance" action="action_ai_audit_log" sequence="1"/>
-    <menuitem id="menu_ai_field_rules" name="Field Permissions" parent="menu_ai_governance" action="action_ai_field_rule" sequence="2"/>
-    <menuitem id="menu_ai_team_scope" name="Team Scopes" parent="menu_ai_governance" action="action_ai_team_scope" sequence="3"/>
-    <menuitem id="menu_ai_elevated_access" name="Elevated Access" parent="menu_ai_governance" action="action_ai_elevated_access" sequence="4"/>
-    <menuitem id="menu_ai_quota" name="Usage Quotas" parent="menu_ai_governance" action="action_ai_quota" sequence="5"/>
-    <menuitem id="menu_ai_approval_rules" name="Approval Matrix" parent="menu_ai_governance" action="action_ai_approval_rule" sequence="6"/>
+    <!-- ======================= مصفوفة الموافقات ======================= -->
+    <record id='ai_approval_rule_view_list' model='ir.ui.view'>
+        <field name='name'>ai.approval.rule.list</field>
+        <field name='model'>ai.approval.rule</field>
+        <field name='arch' type='xml'>
+            <list editable='bottom'>
+                <field name='model_id'/>
+                <field name='kind'/>
+                <field name='requires_manager_approval'/>
+                <field name='amount_field'/>
+                <field name='threshold'/>
+                <field name='approver_id'/>
+            </list>
+        </field>
+    </record>
+
+    <record id='ai_approval_rule_view_form' model='ir.ui.view'>
+        <field name='name'>ai.approval.rule.form</field>
+        <field name='model'>ai.approval.rule</field>
+        <field name='arch' type='xml'>
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name='model_id'/>
+                            <field name='model_name'/>
+                            <field name='kind'/>
+                        </group>
+                        <group>
+                            <field name='requires_manager_approval'/>
+                            <field name='amount_field'/>
+                            <field name='threshold'/>
+                            <field name='approver_id'/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='action_ai_approval_rule' model='ir.actions.act_window'>
+        <field name='name'>مصفوفة الموافقات</field>
+        <field name='res_model'>ai.approval.rule</field>
+        <field name='view_mode'>list,form</field>
+    </record>
+
+    <!-- ======================= القوائم ======================= -->
+    <menuitem id='menu_ai_governance' name='الحوكمة' parent='menu_ai_root' sequence='10'/>
+    <menuitem id='menu_ai_usage_reports' name='تقارير الاستخدام' parent='menu_ai_governance' action='action_ai_audit_log' sequence='1'/>
+    <menuitem id='menu_ai_field_rules' name='صلاحيات الحقول' parent='menu_ai_governance' action='action_ai_field_rule' sequence='2'/>
+    <menuitem id='menu_ai_team_scope' name='نطاقات الفرق' parent='menu_ai_governance' action='action_ai_team_scope' sequence='3'/>
+    <menuitem id='menu_ai_elevated_access' name='الصلاحيات المرتفعة' parent='menu_ai_governance' action='action_ai_elevated_access' sequence='4'/>
+    <menuitem id='menu_ai_quota' name='حصص الاستخدام' parent='menu_ai_governance' action='action_ai_quota' sequence='5'/>
+    <menuitem id='menu_ai_approval_rules' name='مصفوفة الموافقات' parent='menu_ai_governance' action='action_ai_approval_rule' sequence='6'/>
 </odoo>

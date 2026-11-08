@@ -1,9 +1,8 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.exceptions import UserError
 
-# model -> (owner field path, shared data). The owner field is the path (on that model) to the
-# res.users who owns the record; it is used to limit what "own data" and "team" tiers can see.
+# النموذج -> (مسار حقل المالك، بيانات مشتركة). حقل المالك هو المسار (على ذلك النموذج) إلى
+# المستخدم (res.users) المالك للسجل، ويُستخدم لتحديد ما يراه مستوى "بياناتي فقط" ومستوى "الفريق".
 DEFAULT_SCOPES = {
     'sale.order': ('user_id', False),
     'sale.order.line': ('salesman_id', False),
@@ -33,34 +32,33 @@ DEFAULT_SCOPES = {
 
 class AiAllowedModel(models.Model):
     _name = 'ai.allowed.model'
-    _description = 'Models the AI assistant may access'
+    _description = 'النماذج المسموح للمساعد الذكي بالوصول إليها'
 
-    model_id = fields.Many2one('ir.model', required=True, ondelete='cascade', string='Model')
-    model_name = fields.Char(related='model_id.model', store=True)
-    perm_read = fields.Boolean('Read', default=True)
-    perm_create = fields.Boolean('Create', default=False)
-    perm_write = fields.Boolean('Update', default=False)
-    perm_call = fields.Boolean('Workflow buttons', default=False,
-                               help='Allow whitelisted buttons (confirm order, post invoice...) after user approval.')
-    perm_draft = fields.Boolean('Draft form', default=False,
-                                help='The assistant may open a NEW form of this model already filled with data. '
-                                     'Nothing is saved: the user reviews the form and saves it himself.')
+    model_id = fields.Many2one('ir.model', string='النموذج', required=True, ondelete='cascade')
+    model_name = fields.Char(string='الاسم التقني', related='model_id.model', store=True)
+    perm_read = fields.Boolean('قراءة', default=True)
+    perm_create = fields.Boolean('إنشاء', default=False)
+    perm_write = fields.Boolean('تعديل', default=False)
+    perm_call = fields.Boolean('أزرار سير العمل', default=False,
+                               help='السماح بأزرار محددة مسبقاً (تأكيد الطلب، ترحيل الفاتورة...) بعد موافقة المستخدم.')
+    perm_draft = fields.Boolean('نموذج مسودة', default=False,
+                                help='يستطيع المساعد فتح نموذج جديد من هذا النموذج معبّأً بالبيانات. '
+                                     'لا يتم حفظ أي شيء: يراجع المستخدم النموذج ويحفظه بنفسه.')
     owner_field = fields.Char(
-        'Owner field',
-        help='Path to the user who owns the record (e.g. user_id, invoice_user_id, employee_id.user_id). '
-             'Users of the tier "own data only" see only records where this field is themselves; '
-             'team leaders see themselves and their team. Leave empty together with "Shared data" unticked '
-             'to hide the model from those tiers.')
+        'حقل المالك',
+        help='مسار الحقل الذي يشير إلى مالك السجل (مثل user_id أو invoice_user_id أو employee_id.user_id). '
+             'مستخدمو مستوى "بياناتي فقط" يرون السجلات التي هم مالكوها فقط، وقادة الفرق يرون سجلاتهم وسجلات فريقهم. '
+             'اتركه فارغاً مع عدم تفعيل "بيانات مشتركة" لإخفاء النموذج عن هذه المستويات.')
     shared_data = fields.Boolean(
-        'Shared data', default=False,
-        help='Same data for everybody (products, stock levels...). Tiers "own data" and "team" can read it without an owner filter.')
-    max_records = fields.Integer('Max records per query', default=30)
+        'بيانات مشتركة', default=False,
+        help='بيانات واحدة للجميع (المنتجات، أرصدة المخزون...). يستطيع مستوى "بياناتي فقط" ومستوى "الفريق" قراءتها دون فلتر مالك.')
+    max_records = fields.Integer('أقصى عدد سجلات لكل استعلام', default=30)
 
-    _sql_constraints = [('model_uniq', 'unique(model_id)', 'This model is already configured.')]
+    _sql_constraints = [('model_uniq', 'unique(model_id)', 'هذا النموذج مُعدّ مسبقاً.')]
 
     @api.constrains('model_id', 'owner_field')
     def _check_owner_field(self):
-        """Ensure the configured owner path exists on the selected model."""
+        """التأكد من أن مسار حقل المالك موجود في النموذج المختار."""
         for rec in self:
             if not rec.owner_field:
                 continue
@@ -72,14 +70,14 @@ class AiAllowedModel(models.Model):
             for part in parts:
                 if part not in cursor._fields:
                     raise UserError(
-                        'Field path "%s" does not exist on model %s.'
+                        'مسار الحقل "%s" غير موجود في النموذج %s.'
                         % (rec.owner_field, rec.model_name)
                     )
                 cursor = self.env[cursor._fields[part].comodel_name]
 
     @api.model
     def _apply_default_scopes(self):
-        """Fill owner_field / shared_data of rows that do not have a scope yet."""
+        """تعبئة حقل المالك والبيانات المشتركة للسجلات التي ليس لها نطاق بعد."""
         for rec in self.search([]):
             if rec.owner_field or rec.shared_data:
                 continue

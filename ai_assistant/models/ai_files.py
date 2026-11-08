@@ -9,13 +9,13 @@ from odoo.exceptions import UserError
 
 from .ai_assistant import MAX_B64, MAX_FILES
 
-# Sent as-is to the model (vision / PDF / audio understanding)
+# تُرسل كما هي إلى النموذج (فهم الصور وملفات PDF والصوت)
 INLINE_TYPES = (
     'image/png', 'image/jpeg', 'image/webp', 'image/gif', 'application/pdf',
     'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/ogg', 'audio/webm',
     'audio/mp4', 'audio/aac', 'audio/flac', 'audio/x-m4a', 'audio/m4a',
 )
-# Converted to text on the server and added to the message
+# تُحوَّل إلى نص على الخادم وتُضاف إلى الرسالة
 TEXT_EXT = ('txt', 'csv', 'tsv', 'json', 'xml', 'md', 'log', 'docx', 'xlsx')
 MAX_TEXT = 20000
 
@@ -28,10 +28,10 @@ class AiAssistantFiles(models.AbstractModel):
         out = []
         for a in (attachments or [])[:MAX_FILES]:
             if not isinstance(a, dict) or a.get('mimetype') not in INLINE_TYPES:
-                raise UserError('Unsupported file type: %s' % (a.get('name') if isinstance(a, dict) else ''))
+                raise UserError('نوع الملف غير مدعوم: %s' % (a.get('name') if isinstance(a, dict) else ''))
             data = a.get('data') or ''
             if not data or len(data) > MAX_B64:
-                raise UserError('File too large or empty (max about 8 MB).')
+                raise UserError('الملف كبير جداً أو فارغ (الحد الأقصى حوالي 8 ميجابايت).')
             out.append({'name': str(a.get('name') or 'file')[:80], 'mimetype': a['mimetype'], 'data': data})
         return out
 
@@ -51,14 +51,14 @@ class AiAssistantFiles(models.AbstractModel):
                 try:
                     import openpyxl
                 except ImportError:
-                    raise UserError('Excel files need the openpyxl python package on the server.')
+                    raise UserError('ملفات Excel تحتاج حزمة openpyxl على الخادم.')
                 wb = openpyxl.load_workbook(io.BytesIO(raw), read_only=True, data_only=True)
                 lines = []
                 for ws in wb.worksheets[:5]:
-                    lines.append('## sheet: %s' % ws.title)
+                    lines.append('## ورقة: %s' % ws.title)
                     for i, row in enumerate(ws.iter_rows(values_only=True)):
                         if i >= 300:
-                            lines.append('... (truncated)')
+                            lines.append('... (تم الاقتطاع)')
                             break
                         lines.append('\t'.join('' if c is None else str(c) for c in row))
                 text = '\n'.join(lines)
@@ -70,7 +70,7 @@ class AiAssistantFiles(models.AbstractModel):
         except UserError:
             raise
         except Exception as e:
-            raise UserError('Cannot read the file %s: %s' % (name, e))
+            raise UserError('تعذّرت قراءة الملف %s: %s' % (name, e))
         return text[:MAX_TEXT]
 
     @api.model
@@ -82,7 +82,7 @@ class AiAssistantFiles(models.AbstractModel):
             name = str(a.get('name') or 'file')
             ext = self._ext(name)
             if ext in TEXT_EXT or str(a.get('mimetype') or '').startswith('text/'):
-                blocks.append('[Attached file: %s]\n%s' % (name, self._extract_text(name, ext, a.get('data') or '')))
+                blocks.append('[ملف مرفق: %s]\n%s' % (name, self._extract_text(name, ext, a.get('data') or '')))
             else:
                 rest.append(a)
         if blocks:

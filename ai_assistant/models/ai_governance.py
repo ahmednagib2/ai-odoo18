@@ -6,27 +6,27 @@ from odoo.exceptions import UserError
 
 class AiAuditLog(models.Model):
     _name = 'ai.audit.log'
-    _description = 'AI Assistant Audit Log'
+    _description = 'سجل تدقيق المساعد الذكي'
     _order = 'id desc'
 
-    user_id = fields.Many2one('res.users', string='User', default=lambda s: s.env.user, index=True)
-    conversation_id = fields.Many2one('ai.conversation', string='Conversation', ondelete='set null')
-    action = fields.Char(required=True, index=True)
-    model_name = fields.Char(index=True)
-    record_ids = fields.Text()
-    domain = fields.Text()
-    scope = fields.Char()
+    user_id = fields.Many2one('res.users', string='المستخدم', default=lambda s: s.env.user, index=True)
+    conversation_id = fields.Many2one('ai.conversation', string='المحادثة', ondelete='set null')
+    action = fields.Char(string='الإجراء', required=True, index=True)
+    model_name = fields.Char(string='النموذج', index=True)
+    record_ids = fields.Text(string='السجلات')
+    domain = fields.Text(string='الشرط (Domain)')
+    scope = fields.Char(string='النطاق')
     status = fields.Selection([
-        ('success', 'Success'),
-        ('denied', 'Denied'),
-        ('error', 'Error'),
-        ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-    ], default='success', index=True)
-    details = fields.Text()
-    duration = fields.Float(string='Duration (s)')
-    create_date = fields.Datetime(string='Created On', index=True)
+        ('success', 'نجح'),
+        ('denied', 'مرفوض'),
+        ('error', 'خطأ'),
+        ('pending', 'معلّق'),
+        ('approved', 'تمت الموافقة'),
+        ('rejected', 'مرفوض من المعتمد'),
+    ], string='الحالة', default='success', index=True)
+    details = fields.Text(string='التفاصيل')
+    duration = fields.Float(string='المدة (ثانية)')
+    create_date = fields.Datetime(string='تاريخ الإنشاء', index=True)
 
     @api.model
     def log_event(self, action, model_name=None, record_ids=None, domain=None,
@@ -50,26 +50,26 @@ class AiAuditLog(models.Model):
 
 class AiFieldRule(models.Model):
     _name = 'ai.field.rule'
-    _description = 'AI Assistant Field Permission'
+    _description = 'صلاحية حقل للمساعد الذكي'
     _order = 'model_id, field_name, tier'
 
-    model_id = fields.Many2one('ir.model', required=True, ondelete='cascade', string='Model')
-    model_name = fields.Char(related='model_id.model', store=True)
-    field_name = fields.Char(required=True, index=True)
+    model_id = fields.Many2one('ir.model', required=True, ondelete='cascade', string='النموذج')
+    model_name = fields.Char(string='الاسم التقني للنموذج', related='model_id.model', store=True)
+    field_name = fields.Char(string='اسم الحقل', required=True, index=True)
     tier = fields.Selection([
-        ('user', 'Employee (own data)'),
-        ('team', 'Manager (team data)'),
-        ('manager', 'General Manager'),
-    ], required=True, default='user', index=True)
+        ('user', 'موظف (بياناته فقط)'),
+        ('team', 'مدير (بيانات الفريق)'),
+        ('manager', 'مدير عام'),
+    ], string='المستوى', required=True, default='user', index=True)
     action = fields.Selection([
-        ('hide', 'Hide field'),
-        ('mask', 'Mask value'),
-    ], required=True, default='mask')
-    active = fields.Boolean(default=True)
+        ('hide', 'إخفاء الحقل'),
+        ('mask', 'تعتيم القيمة'),
+    ], string='الإجراء', required=True, default='mask')
+    active = fields.Boolean(string='نشط', default=True)
 
     _sql_constraints = [
         ('field_rule_uniq', 'unique(model_id, field_name, tier)',
-         'This field rule already exists for this model and access level.'),
+         'قاعدة هذا الحقل موجودة مسبقاً لهذا النموذج ولهذا المستوى.'),
     ]
 
     @api.model
@@ -88,19 +88,19 @@ class AiFieldRule(models.Model):
 
 class AiTeamScope(models.Model):
     _name = 'ai.team.scope'
-    _description = 'AI Assistant Team Scope'
+    _description = 'نطاق فريق المساعد الذكي'
     _order = 'manager_id'
 
-    manager_id = fields.Many2one('res.users', required=True, ondelete='cascade', string='Manager')
-    member_ids = fields.Many2many('res.users', string='Team Members')
+    manager_id = fields.Many2one('res.users', required=True, ondelete='cascade', string='المدير')
+    member_ids = fields.Many2many('res.users', string='أعضاء الفريق')
     include_hierarchy = fields.Boolean(
-        string='Include HR hierarchy',
+        string='تضمين الهيكل الإداري (HR)',
         default=True,
-        help='Also include employees reporting to this manager in the HR organization chart.')
-    active = fields.Boolean(default=True)
+        help='إضافة الموظفين التابعين لهذا المدير في الهيكل التنظيمي للموارد البشرية.')
+    active = fields.Boolean(string='نشط', default=True)
 
     _sql_constraints = [
-        ('manager_uniq', 'unique(manager_id)', 'This user already has a team scope configuration.'),
+        ('manager_uniq', 'unique(manager_id)', 'هذا المستخدم لديه إعداد نطاق فريق مسبقاً.'),
     ]
 
     @api.model
@@ -120,24 +120,24 @@ class AiTeamScope(models.Model):
 
 class AiElevatedAccess(models.Model):
     _name = 'ai.elevated.access'
-    _description = 'AI Assistant Temporary Elevated Access'
+    _description = 'صلاحية مرتفعة مؤقتة للمساعد الذكي'
     _order = 'date_start desc'
 
-    user_id = fields.Many2one('res.users', required=True, ondelete='cascade', string='User')
+    user_id = fields.Many2one('res.users', required=True, ondelete='cascade', string='المستخدم')
     tier = fields.Selection([
-        ('team', 'Team Leader'),
-        ('manager', 'General Manager'),
-    ], required=True, default='team')
-    date_start = fields.Datetime(required=True, default=fields.Datetime.now)
-    date_end = fields.Datetime(required=True)
-    reason = fields.Text()
-    active = fields.Boolean(default=True)
+        ('team', 'قائد فريق'),
+        ('manager', 'مدير عام'),
+    ], string='المستوى', required=True, default='team')
+    date_start = fields.Datetime(string='من تاريخ', required=True, default=fields.Datetime.now)
+    date_end = fields.Datetime(string='إلى تاريخ', required=True)
+    reason = fields.Text(string='السبب')
+    active = fields.Boolean(string='نشط', default=True)
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
         for rec in self:
             if rec.date_end <= rec.date_start:
-                raise UserError('End date must be after start date.')
+                raise UserError('يجب أن يكون تاريخ النهاية بعد تاريخ البداية.')
 
     @api.model
     def get_active_tier(self, user_id):
@@ -156,7 +156,7 @@ class AiElevatedAccess(models.Model):
 
     @api.model
     def _cron_expire(self):
-        """Deactivate elevated-access grants whose end date has passed."""
+        """إيقاف الصلاحيات المرتفعة التي انتهى تاريخها."""
         now = fields.Datetime.now()
         expired = self.sudo().search([
             ('active', '=', True),
@@ -168,26 +168,26 @@ class AiElevatedAccess(models.Model):
 
 class AiQuota(models.Model):
     _name = 'ai.quota'
-    _description = 'AI Assistant Usage Quota'
+    _description = 'حصة استخدام المساعد الذكي'
     _order = 'id'
 
-    name = fields.Char(required=True)
-    user_id = fields.Many2one('res.users', string='User', ondelete='cascade')
+    name = fields.Char(string='الاسم', required=True)
+    user_id = fields.Many2one('res.users', string='المستخدم', ondelete='cascade')
     target = fields.Selection([
-        ('user', 'Specific user'),
-        ('group', 'Access level'),
-    ], required=True, default='user')
+        ('user', 'مستخدم محدد'),
+        ('group', 'مستوى صلاحية'),
+    ], string='ينطبق على', required=True, default='user')
     access_tier = fields.Selection([
-        ('user', 'Employee'),
-        ('team', 'Manager'),
-        ('manager', 'General Manager'),
-    ])
+        ('user', 'موظف'),
+        ('team', 'مدير'),
+        ('manager', 'مدير عام'),
+    ], string='مستوى الصلاحية')
     period = fields.Selection([
-        ('day', 'Per day'),
-        ('month', 'Per month'),
-    ], required=True, default='day')
-    max_requests = fields.Integer(required=True, default=100)
-    active = fields.Boolean(default=True)
+        ('day', 'يومياً'),
+        ('month', 'شهرياً'),
+    ], string='الفترة', required=True, default='day')
+    max_requests = fields.Integer(string='أقصى عدد طلبات', required=True, default=100)
+    active = fields.Boolean(string='نشط', default=True)
 
     @api.model
     def check_quota(self):
@@ -213,30 +213,30 @@ class AiQuota(models.Model):
             ])
             if used >= rule.max_requests:
                 raise UserError(
-                    'AI usage limit reached (%s requests per %s). Please try again later.'
-                    % (rule.max_requests, rule.period))
+                    'وصلت للحد الأقصى لاستخدام المساعد الذكي (%s طلب %s). حاول لاحقاً.'
+                    % (rule.max_requests, 'يومياً' if rule.period == 'day' else 'شهرياً'))
 
 
 class AiApprovalRule(models.Model):
     _name = 'ai.approval.rule'
-    _description = 'AI Assistant Approval Matrix'
+    _description = 'قاعدة موافقة المساعد الذكي'
     _order = 'model_id, kind'
 
-    model_id = fields.Many2one('ir.model', required=True, ondelete='cascade', string='Model')
-    model_name = fields.Char(related='model_id.model', store=True)
+    model_id = fields.Many2one('ir.model', required=True, ondelete='cascade', string='النموذج')
+    model_name = fields.Char(string='الاسم التقني للنموذج', related='model_id.model', store=True)
     kind = fields.Selection([
-        ('write', 'Update'),
-        ('call', 'Workflow'),
-    ], required=True, default='write')
-    requires_manager_approval = fields.Boolean(string='Manager approval required', default=False)
+        ('write', 'تعديل'),
+        ('call', 'سير عمل'),
+    ], string='نوع الإجراء', required=True, default='write')
+    requires_manager_approval = fields.Boolean(string='تتطلب موافقة المدير', default=False)
     amount_field = fields.Char(
-        string='Amount field',
-        help='Optional numeric field used to compare against the approval threshold.')
-    threshold = fields.Float(string='Threshold')
-    approver_id = fields.Many2one('res.users', string='Approver')
+        string='حقل المبلغ',
+        help='حقل رقمي اختياري تتم مقارنته بحد الموافقة.')
+    threshold = fields.Float(string='حد الموافقة')
+    approver_id = fields.Many2one('res.users', string='المعتمد')
 
     _sql_constraints = [
-        ('approval_rule_uniq', 'unique(model_id, kind)', 'This approval rule already exists for this model.'),
+        ('approval_rule_uniq', 'unique(model_id, kind)', 'قاعدة الموافقة هذه موجودة مسبقاً لهذا النموذج.'),
     ]
 
     @api.model

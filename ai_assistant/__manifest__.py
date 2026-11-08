@@ -1,8 +1,9 @@
 {
-    'name': 'AI Assistant',
-    'version': '18.0.4.3.0',
+    'name': 'المساعد الذكي (AI Assistant)',
+    'version': '18.0.4.4.0',
     'category': 'Productivity',
-    'summary': 'AI copilot in the navbar (OpenAI, Gemini, Claude, OpenClaw / any OpenAI-compatible API) with access tiers, form drafts and safe actions. Never deletes.',
+    'summary': 'مساعد ذكي في الشريط العلوي (OpenAI وGemini وClaude وأي API متوافق) مع مستويات صلاحيات ومسودات نماذج وإجراءات آمنة. لا يحذف أي بيانات أبداً.',
+    'author': 'Ahmed Nagib',
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',

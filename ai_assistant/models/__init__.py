@@ -10,3 +10,4 @@ from . import ai_provider_files
 from . import ai_plus
 from . import ai_governance
 from . import ai_fix
+from . import ai_arabic

@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
-    <record id="group_ai_user" model="res.groups">
-        <field name="name">AI Assistant - User (own data only)</field>
-        <field name="comment">Can use the assistant. The assistant only shows this user his own records (per model owner field in Allowed Models).</field>
+    <record id='group_ai_user' model='res.groups'>
+        <field name='name'>المساعد الذكي - مستخدم (بياناته فقط)</field>
+        <field name='comment'>يستطيع استخدام المساعد، ويعرض له المساعد سجلاته الخاصة فقط (حسب حقل المالك في النماذج المسموحة).</field>
     </record>
-    <record id="group_ai_team" model="res.groups">
-        <field name="name">AI Assistant - Team Leader (own + team data)</field>
-        <field name="comment">Own records plus the records of the employees under him (HR manager hierarchy and the sales teams he leads).</field>
-        <field name="implied_ids" eval="[(4, ref('group_ai_user'))]"/>
+    <record id='group_ai_team' model='res.groups'>
+        <field name='name'>المساعد الذكي - قائد فريق (بياناته وبيانات فريقه)</field>
+        <field name='comment'>سجلاته الخاصة بالإضافة إلى سجلات الموظفين التابعين له (الهيكل الإداري في الموارد البشرية وفرق المبيعات التي يقودها).</field>
+        <field name='implied_ids' eval="[(4, ref('group_ai_user'))]"/>
     </record>
-    <record id="group_ai_manager" model="res.groups">
-        <field name="name">AI Assistant - General Manager (all data)</field>
-        <field name="comment">Everything his Odoo permissions allow, for all employees.</field>
-        <field name="implied_ids" eval="[(4, ref('group_ai_team'))]"/>
+    <record id='group_ai_manager' model='res.groups'>
+        <field name='name'>المساعد الذكي - مدير عام (كل البيانات)</field>
+        <field name='comment'>كل ما تسمح به صلاحيات أودو الخاصة به، لجميع الموظفين.</field>
+        <field name='implied_ids' eval="[(4, ref('group_ai_team'))]"/>
     </record>
 </odoo>
